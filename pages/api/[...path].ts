@@ -28,11 +28,11 @@ export default async function handler(req, res) {
   console.log('➡️ Requisição recebida:');
   console.log('Método:', req.method);
   console.log('URL original:', req.url);
-  console.log('Encaminhado para:', `http://31.97.151.33:4444${backendPath}`);
+  console.log('Encaminhado para:', `http://72.60.8.246:4444${backendPath}`);
   console.log('---------------------\n');
 
   try {
-    const response = await fetch(`http://31.97.151.33:4444${backendPath}`, {
+    const response = await fetch(`http://72.60.8.246:4444${backendPath}`, {
       method: req.method,
       headers: safeHeaders,
       body: ['GET', 'HEAD'].includes(req.method) ? undefined : rawBody,
