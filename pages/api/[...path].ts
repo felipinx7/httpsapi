@@ -22,7 +22,12 @@ export default async function handler(req, res) {
   } = req.headers;
 
   safeHeaders['host'] = '31.97.151.33';
-  safeHeaders['content-type'] = safeHeaders['content-type'] || 'application/json';
+  const methodsWithBody = ['POST', 'PUT', 'PATCH'];
+  if (methodsWithBody.includes(req.method) && rawBody.length > 0) {
+    safeHeaders['content-type'] = safeHeaders['content-type'] || 'application/json';
+  } else {
+    delete safeHeaders['content-type']; // remove para GET, HEAD, DELETE sem body
+  }
 
   console.log('\n--- PROXY DEBUG ---');
   console.log('➡️ Requisição recebida:');
@@ -35,7 +40,7 @@ export default async function handler(req, res) {
     const response = await fetch(`http://72.60.8.246:4444${backendPath}`, {
       method: req.method,
       headers: safeHeaders,
-      body: ['GET', 'HEAD'].includes(req.method) ? undefined : rawBody,
+      body: methodsWithBody.includes(req.method) ? rawBody : undefined,
     });
 
     res.status(response.status);
@@ -48,3 +53,5 @@ export default async function handler(req, res) {
     res.status(502).json({ error: 'Erro ao redirecionar para o backend.' });
   }
 }
+
+
